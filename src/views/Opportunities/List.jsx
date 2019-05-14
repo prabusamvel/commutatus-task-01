@@ -108,20 +108,27 @@ class Opportunities extends React.Component{
         total_pages: 0
       },
       isLoaded: false,
+      loadText:{
+        title: 'Please wait...',
+        message: 'Your request is loading...'
+      }
     }
   }
 
   componentDidMount(){
     getOpportunities().then(op_response => {
-      if(op_response !== false){
-
+      if(op_response !== false && Object.keys(op_response).length > 1){
         let opportunities = this.state.opportunities;
         opportunities = op_response.data;
-
         let paging = this.state.paging;
         paging = op_response.paging;
-
         this.setState({isLoaded: true, opportunities, paging});
+      }else{
+        let err = op_response.hasOwnProperty('error') ? op_response.error : 'Unknown';
+        let loadText = this.state.loadText;
+        loadText.title = "API endpoint failed to response.";
+        loadText.message = err;
+        this.setState({loadText});
       }
     });
   }
@@ -206,7 +213,7 @@ class Opportunities extends React.Component{
 
   render(){
     const { classes } = this.props;
-    let {isLoaded, opportunities } = this.state;
+    let {isLoaded, opportunities, loadText} = this.state;
     return(
       <GridContainer>
 
@@ -265,8 +272,8 @@ class Opportunities extends React.Component{
                 ))
                 : (
                     <CardHeader color="primary">
-                      <h4 className={classes.cardTitleWhite}>Please wait</h4>
-                      <p className={classes.cardCategoryWhite}>Your request is loading...</p>
+                      <h4 className={classes.cardTitleWhite}>{loadText.title}</h4>
+                      <p className={classes.cardCategoryWhite}>{loadText.message}</p>
                     </CardHeader>
                   )
               }

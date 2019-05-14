@@ -171,7 +171,11 @@ class Opportunity extends React.Component{
         currency: "EUR",
         city: ""
       },
-      err:''
+      err:'',
+      loadText:{
+        title: 'Please wait...',
+        message: 'Your request is loading...'
+      }
     }
   }
 
@@ -186,7 +190,7 @@ class Opportunity extends React.Component{
     });
 
     getOpportunity(this.state.opportunity_id).then(op_response => {
-      if(op_response !== false){
+      if(op_response !== false && Object.keys(op_response).length > 1){
         let opportunity_info = op_response;
         let need = {
           'form_data':['title', 'applications_close_date', 'earliest_start_date', 'latest_end_date', 'description', 'backgrounds', 'role_info.selection_process', 'specifics_info.salary', 'role_info.city']
@@ -202,6 +206,13 @@ class Opportunity extends React.Component{
         opportunity_short_info.form_data.latest_end_date = toSysDate(opportunity_short_info.form_data.latest_end_date);
 
         this.setState({opportunity_info, opportunity_short_info, backgrounds, isLoaded: true});
+      }
+      else{
+        let err = op_response.hasOwnProperty('error') ? op_response.error : 'Unknown';
+        let loadText = this.state.loadText;
+        loadText.title = "API endpoint failed to response.";
+        loadText.message = err;
+        this.setState({loadText});
       }
     });
   }
@@ -289,6 +300,8 @@ class Opportunity extends React.Component{
       }
     };
 
+    this.setState({err:''});
+
     updateOpportunity(patchObject, this.state.opportunity_id).then(result => {
       if(result !== false && Object.keys(result).length > 1){
         this.props.history.push(`/opportunity/view/${this.state.opportunity_id}`);
@@ -302,7 +315,7 @@ class Opportunity extends React.Component{
 
   render(){
     let {classes} = this.props;
-    let {isLoaded, opportunity_id, opportunity_info, opportunity_short_info, backgrounds} = this.state;
+    let {isLoaded, opportunity_id, opportunity_info, opportunity_short_info, backgrounds, loadText} = this.state;
     let bgshort = {};
     if(isLoaded){
       backgrounds.forEach(bg => {
@@ -531,8 +544,8 @@ class Opportunity extends React.Component{
                   </div>
                   <GridItem xs={12} sm={12} md={12}>
                       <CardHeader color="primary" style={{marginTop:'30px'}}>
-                        <h4 className={classes.cardTitleWhite}>Please wait</h4>
-                        <p className={classes.cardCategoryWhite}>Your request is loading...</p>
+                        <h4 className={classes.cardTitleWhite}>{loadText.title}</h4>
+                        <p className={classes.cardCategoryWhite}>{loadText.message}</p>
                       </CardHeader>
                   </GridItem>
                 </GridContainer>
