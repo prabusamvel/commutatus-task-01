@@ -72,7 +72,10 @@ const headerStyle = theme => ({
     margin: "0",
     "&:hover,&:focus": {
       background: "transparent"
-    }
+    },
+    [theme.breakpoints.down('sm')]: {
+      padding: "12px 0",
+    },
   },
   appResponsive: {
     top: "8px"
@@ -106,10 +109,31 @@ const headerStyle = theme => ({
     display: "inline-block",
     listStyle: "none",
     float: "right",
-    marginRight: "25px",
-    margin: "10px 0"
+    [theme.breakpoints.down('sm')]: {
+      marginRight: 0,
+      marginTop:'8px',
+      paddingLeft: 0
+    },
+    [theme.breakpoints.up('md')]: {
+      marginRight: "25px",
+      margin: "10px 0"
+    }
   },
-  navUlLi: {
+  navUlLiT: {
+    [theme.breakpoints.down('sm')]: {
+      display: "none",
+    },
+    [theme.breakpoints.up('md')]: {
+      display: "inline",
+    },
+    margin: "0 15px",
+    color: "#fff !important",
+    fontSize: "16px !important",
+    padding: 0,
+    cursor: "pointer",
+    fontWeight: 400
+  },
+  navUlLiB: {
     display: "inline",
     margin: "0 15px",
     color: "#fff !important",

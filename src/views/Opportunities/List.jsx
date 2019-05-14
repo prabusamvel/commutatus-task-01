@@ -14,7 +14,7 @@ import Button from "components/CustomButtons/Button.jsx";
 //importing custom helper functions
 import {getShortDate, getDays, getOpportunities} from '../../helper/opportunity_helper';
 
-const styles = {
+const styles = theme => ({
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
       color: "rgba(255,255,255,.62)",
@@ -65,9 +65,18 @@ const styles = {
     left: 0,
     right: 0,
     textAlign: "center",
-    fontSize: "52px",
     color: "#fff",
-    fontWeight: 400
+    fontWeight: 400,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: "2rem",
+      lineHeight:'normal'
+    },
+    [theme.breakpoints.up('md')]: {
+      fontSize: "52px",
+    },
+    [theme.breakpoints.up('lg')]: {
+      fontSize: "60px",
+    }
   },
   overLayText:{
     position: "absolute",
@@ -83,7 +92,15 @@ const styles = {
     lineHeight: "24px"
   },
   alpha_img:{width: '20px', height: '20px', borderRadius: '50%', position:'absolute'},
-  oppr_img:{width:'210px', height:'120px'},
+  oppr_img:{
+    height:'120px',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    [theme.breakpoints.up('md')]: {
+      width:'210px',
+    },
+  },
   op_list:{
     margin: '45px 0',
     '&:hover':{
@@ -93,8 +110,16 @@ const styles = {
   op_list_inner:{
     height:'120px',
     cursor:'pointer'
+  },
+  hideExtSnap:{
+    [theme.breakpoints.down('sm')]: {
+      display: "none"
+    },
+    [theme.breakpoints.up('md')]: {
+      display: "block",
+    },
   }
-};
+});
 
 class Opportunities extends React.Component{
 
@@ -198,7 +223,7 @@ class Opportunities extends React.Component{
             {new_pages.map((p, i) => (
               <Button
               key={i}
-              round style={{borderRadius:'50%', padding:'10px', width:'40px', height:'40px', margin: '0 5px'}}
+              round style={{borderRadius:'50%', padding:'10px', width:'40px', height:'40px', margin: '5px'}}
               color={tOptions.current_page !== p ? "primary" : "default"}
               onClick={() => this.setPage(p)}>
                 {p}
@@ -231,10 +256,10 @@ class Opportunities extends React.Component{
                 ? opportunities.map((op, i) => (
                   <div key={i} className={classes.op_list} onClick={() => this.doView(op.id)}>
                     <GridContainer className={classes.op_list_inner}>
-                      <GridItem xs={12} sm={12} md={3} style={{textAlign:'right'}}>
+                      <GridItem xs={5} sm={5} md={3} style={{textAlign:'right'}}>
                         <img className={classes.oppr_img} src={op.cover_photo_urls} alt={op.title + 'cover photo'}/>
                       </GridItem>
-                      <GridItem xs={12} sm={12} md={6}>
+                      <GridItem xs={7} sm={7} md={6}>
                         <p>
                           <b style={{fontSize:'1rem', fontWeight: 'bolder'}}>{op.title}</b>
                           <span style={{float:'right'}}>
@@ -250,21 +275,21 @@ class Opportunities extends React.Component{
                         <p>
                           <span><img className={classes.alpha_img} src={op.branch.organisation.profile_photo_urls.original} alt={op.branch.organisation.name}/></span>
                           <span style={{marginLeft:'25px'}}>{op.branch.organisation.name}</span>
-
-                          <span style={{float:'right'}}>&nbsp;: {op.applications_count} applicant</span>
-                          <span style={{float:'right'}}>
-                            <i className="material-icons">
-                              face
-                            </i>
+                          <span className={classes.hideExtSnap}>
+                            <span style={{float:'right'}}>&nbsp;: {op.applications_count} applicant</span>
+                            <span style={{float:'right'}}>
+                              <i className="material-icons">
+                                face
+                              </i>
+                            </span>
+                            <span style={{float:'right'}}>
+                            {
+                              op.applications_count === 0
+                              ? (<span style={{color:'green'}}>Be the first one to apply! &nbsp;&nbsp;</span>)
+                              : null
+                            }
+                            </span>
                           </span>
-                          <span style={{float:'right'}}>
-                          {
-                            op.applications_count === 0
-                            ? (<span style={{color:'green'}}>Be the first one to apply! &nbsp;&nbsp;</span>)
-                            : null
-                          }
-                          </span>
-
                         </p>
                       </GridItem>
                     </GridContainer>

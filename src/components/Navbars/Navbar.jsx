@@ -26,9 +26,9 @@ function Header({ ...props }) {
           </Button>
           <ul className={classes.navUl}>
 
-            <li className={classes.navUlLi}> <a className = {classes.navUlLiA} href="https://partners.aiesec.org/">For Organizations</a> </li>
-            <li className={classes.navUlLi}> <a className = {classes.navUlLiA} href="https://help.aiesec.org/en/">Help</a> </li>
-            <li className={classes.navUlLi}> <Link className = {classes.navUlLiA} to="/opportunities"> <span className={(appBarToggle ? classes.navUlLiABtn : classes.navUlLiABtnScroll)}>Explore</span> </Link></li>
+            <li className={classes.navUlLiT}> <a className = {classes.navUlLiA} href="https://partners.aiesec.org/">For Organizations</a> </li>
+            <li className={classes.navUlLiT}> <a className = {classes.navUlLiA} href="https://help.aiesec.org/en/">Help</a> </li>
+            <li className={classes.navUlLiB}> <Link className = {classes.navUlLiA} to="/opportunities"> <span className={(appBarToggle ? classes.navUlLiABtn : classes.navUlLiABtnScroll)}>Explore</span> </Link></li>
           </ul>
         </div>
       </Toolbar>

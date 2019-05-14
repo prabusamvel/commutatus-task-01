@@ -1,6 +1,11 @@
-const cardBodyStyle = {
+const cardBodyStyle = theme => ({
   cardBody: {
-    padding: "0.9375rem 20px",
+    [theme.breakpoints.down('sm')]: {
+      padding: "10px",
+    },
+    [theme.breakpoints.up('md')]: {
+      padding: "0.9375rem 20px",
+    },
     flex: "1 1 auto",
     WebkitBoxFlex: "1",
     position: "relative"
@@ -12,6 +17,6 @@ const cardBodyStyle = {
   cardBodyProfile: {
     marginTop: "15px"
   }
-};
+});
 
 export default cardBodyStyle;
