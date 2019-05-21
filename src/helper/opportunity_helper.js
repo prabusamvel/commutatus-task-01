@@ -176,3 +176,115 @@ export async function updateOpportunity(data, id){
    .catch(err => console.log(err));
    return response;
  }
+
+//todo - list
+export async function getTerms(committee_id){
+  let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/committees/${committee_id}/terms?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+  let response = await fetch(url)
+  .then(res => res.json())
+  .then(result => {
+    return result;
+  },
+  err => {
+    console.log('faild to get opportunities :', err);
+    return false;
+  })
+  .catch(err => console.log(err));
+  return response;
+}
+
+export async function getTeams(committee_id, term_id){
+  let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/committees/${committee_id}/terms/${term_id}/teams?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+  let response = await fetch(url)
+  .then(res => res.json())
+  .then(result => {
+    return result;
+  },
+  err => {
+    console.log('faild to get opportunities :', err);
+    return false;
+  })
+  .catch(err => console.log(err));
+  return response;
+}
+
+export async function getPositions(team_id){
+
+  let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/teams/${team_id}?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+  let response = await fetch(url)
+  .then(res => res.json())
+  .then(result => {
+    return result;
+  },
+  err => {
+    console.log('faild to get opportunities :', err);
+    return false;
+  })
+  .catch(err => console.log(err));
+  return response;
+}
+
+export async function doUpdatePosition(data, team_id, position_id){
+ let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/teams/${team_id}/positions/${position_id}`;
+ let response = await fetch(url, {
+     method: 'PATCH',
+     mode: 'cors',
+     cache: 'no-cache',
+     credentials: 'same-origin',
+     headers: {
+         'Content-Type': 'application/json',
+     },
+     body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(result => {
+    return result;
+  },
+  err => {
+    console.log('faild to get backgrounds :', err);
+    return false;
+  })
+  .catch(err => console.log(err));
+  return response;
+}
+
+export async function addPosition(data, team_id){
+ let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/teams/${team_id}/positions`;
+ let response = await fetch(url, {
+     method: 'POST',
+     mode: 'cors',
+     cache: 'no-cache',
+     credentials: 'same-origin',
+     headers: {
+         'Content-Type': 'application/json',
+     },
+     body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(result => {
+    return result;
+  },
+  err => {
+    console.log('faild to get backgrounds :', err);
+    return false;
+  })
+  .catch(err => console.log(err));
+  return response;
+}
+
+//holded
+/*export async function getTeamsTree(committee_id){
+
+  //1) terms of committee (committee - 1585)
+  let url1 = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/committees/1585/terms?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+  //2) teams of terms (committee - 1585, term - 1442)
+  let url2 = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/committees/1585/terms/1442/teams?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+  //3) team details (team - 1442)
+  let ulr3 = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/teams/1442?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+
+  let tree = await fetch(url)
+  .then(res => res.json())
+  .then(committee => {
+      committee.terms;
+  });
+}*/

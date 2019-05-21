@@ -2,6 +2,7 @@
 import OpportunitiesList from "views/Opportunities/List.jsx";
 import OpportunityView from "views/Opportunity/View.jsx";
 import OpportunityEdit from "views/Opportunity/Edit.jsx";
+import TeamTreeView from "views/Teams/Tree.jsx";
 
 const dashboardRoutes = [
   {
@@ -18,7 +19,13 @@ const dashboardRoutes = [
     path: "/opportunity/edit",
     name: "Opportunity Edit",
     component: OpportunityEdit
+  },
+  {
+    path: "/teams/view",
+    name: "Team Tree View",
+    component: TeamTreeView
   }
+
 ];
 
 export default dashboardRoutes;
