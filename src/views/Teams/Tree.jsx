@@ -116,6 +116,81 @@ function getModalStyle() {
   };
 }
 
+function processPositions(users) {
+  let newusers = {};
+
+  //making a position_id as key based object (for index based comparision)
+  users.forEach(
+    user => (newusers[`id-${user.id}`] = Object.assign(user, { children: [] }))
+  );
+
+  //pushing the children into parents based on parent_id comparision (into positon.children arr which initlized in before step)
+  users.forEach(user => {
+    if (!!user.parent_id && newusers.hasOwnProperty(`id-${user.parent_id}`)) {
+      newusers[`id-${user.parent_id}`].children.push(user);
+    }
+  });
+
+  //iterating the newly created object && passing into recursive function which creates the tree structure.
+  for (let u in newusers) {
+    let users = newusers[u].children;
+    doNest(users);
+  }
+
+  //recursive function for creating the tree structure
+  function doNest(users) {
+    if (users.length > 0) {
+      users.forEach((user, i) => {
+        let key = `id-${user.id}`;
+        if (newusers.hasOwnProperty(key)) {
+          let position = JSON.parse(JSON.stringify(newusers[key]));
+          if (user.id !== position.id) {
+            user["children"].push(position);
+          }
+          delete newusers[key];
+          doNest(user["children"]);
+        }
+      });
+    }
+  }
+
+  //returing the final array (positions) :)
+  return Object.values(newusers);
+}
+
+function positionRender(positions, team_id, j, k, _this){
+
+  if(Array.isArray(positions) && positions.length > 0 && positions[0].id !== 0){
+    return positions.map(position => (
+      <TreeView
+        nodeLabel={
+          (
+            <span>
+              <span className="node">{position.name}</span>
+              &nbsp;&nbsp;
+              <span style={{cursor:'pointer', color:'red'}} onClick={() => _this.modalOpen(position, team_id, j, k, 'edit')}>edit</span>
+              &nbsp;&nbsp;
+              <span style={{cursor:'pointer', color:'green'}} onClick={() => _this.modalOpen(position, team_id, j, k, 'add')}>add</span>
+            </span>
+          )
+        }
+        key={position.id}
+        defaultCollapsed={true}>
+        {positionRender(position.children, team_id, j, k, _this)}
+      </TreeView>
+    ));
+  }else{
+    console.log('else', positions);
+    return (
+      <TreeView
+        nodeLabel={(<span>{positions.length > 0 ? positions[0].name : 'nothing down here!'}</span>)}
+        defaultCollapsed={true}>
+        <div className="info">(<span>{positions.length > 0 ? positions[0].name : 'nothing down here!'}</span>)</div>
+      </TreeView>
+    )
+  }
+}
+
 class Tree extends React.Component{
 
   constructor(props){
@@ -200,14 +275,21 @@ class Tree extends React.Component{
 
     let checkLoaded = this.state.data[0].terms[j].teams[k].positions[0].name !== 'loading...';
     if(!checkLoaded){
-      getPositions(team_id).then(team_info => {
-          let positions = team_info.hasOwnProperty('positions') && team_info.positions.length > 0 ? team_info.positions : [{id: 0, name:'No positions found!'}];
+      getPositions(team_id).then(team => {
+          let positions = [{id: 0, name:'No positions found!'}];
+          if(team.hasOwnProperty('positions') && team.positions.length > 0){
+            positions = processPositions(team.positions);
+          }
+          console.log('positions', positions);
           let data = this.state.data;
           data[0].terms[j].teams[k].positions = positions;
           this.setState({data, isLoaded: true}, () => {
-            console.log('updating positions', data);
+            //console.log('updating positions', data);
           });
+
       });
+    }else{
+      console.log(this.state.data[0].terms[j].teams[k].positions);
     }
   }
 
@@ -296,6 +378,7 @@ class Tree extends React.Component{
 
   }
 
+
   render(){
     let {classes} = this.props;
     let {isLoaded, loadText, modal} = this.state;
@@ -353,35 +436,7 @@ class Tree extends React.Component{
                                                   }
                                                   defaultCollapsed={true}
                                                   onClick={(event) => this.onTeamClick(event, team.id, j, k)}>
-
-                                                  {team.positions.map(position => {
-                                                    return (
-                                                      <TreeView
-                                                        nodeLabel={
-                                                          (
-                                                            <span>
-                                                              <span className="node">{position.name}</span>
-                                                              &nbsp;&nbsp;
-                                                              <span style={{cursor:'pointer', color:'red'}} onClick={() => this.modalOpen(position, team.id, j, k, 'edit')}>edit</span>
-                                                              &nbsp;&nbsp;
-                                                              <span style={{cursor:'pointer', color:'green'}} onClick={() => this.modalOpen(position, team.id, j, k, 'add')}>add</span>
-                                                            </span>
-                                                          )
-                                                        }
-                                                        key={'l3'+position.name}
-                                                        defaultCollapsed={true}>
-                                                        {
-                                                          position.name === 'No positions found!'
-                                                          ? <div className="info">Nothing to show here...</div>
-                                                          : (
-                                                              <div className="info">
-                                                                {position.hasOwnProperty('person') ? `Name : ${position.person.full_name}` : 'No persons found!'}
-                                                              </div>
-                                                            )
-                                                        }
-                                                      </TreeView>
-                                                    )
-                                                  })}
+                                                  {positionRender(team.positions, team.id, j, k, this)}
                                                 </TreeView>
                                               )
                                           }

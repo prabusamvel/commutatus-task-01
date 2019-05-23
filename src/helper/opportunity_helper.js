@@ -179,7 +179,7 @@ export async function updateOpportunity(data, id){
 
 //todo - list
 export async function getTerms(committee_id){
-  let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/committees/${committee_id}/terms?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+  let url = `https://api-staging.aiesec.org/v2/committees/${committee_id}/terms?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
   let response = await fetch(url)
   .then(res => res.json())
   .then(result => {
@@ -194,7 +194,7 @@ export async function getTerms(committee_id){
 }
 
 export async function getTeams(committee_id, term_id){
-  let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/committees/${committee_id}/terms/${term_id}/teams?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+  let url = `https://api-staging.aiesec.org/v2/committees/${committee_id}/terms/${term_id}/teams?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
   let response = await fetch(url)
   .then(res => res.json())
   .then(result => {
@@ -209,8 +209,8 @@ export async function getTeams(committee_id, term_id){
 }
 
 export async function getPositions(team_id){
-
-  let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/teams/${team_id}?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+  //let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/teams/${team_id}/positions?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
+  let url = `https://api-staging.aiesec.org/v2/teams/${team_id}?access_token=dd0df21c8af5d929dff19f74506c4a8153d7acd34306b9761fd4a57cfa1d483c`;
   let response = await fetch(url)
   .then(res => res.json())
   .then(result => {
@@ -225,7 +225,7 @@ export async function getPositions(team_id){
 }
 
 export async function doUpdatePosition(data, team_id, position_id){
- let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/teams/${team_id}/positions/${position_id}`;
+ let url = `https://api-staging.aiesec.org/v2/teams/${team_id}/positions/${position_id}`;
  let response = await fetch(url, {
      method: 'PATCH',
      mode: 'cors',
@@ -249,7 +249,7 @@ export async function doUpdatePosition(data, team_id, position_id){
 }
 
 export async function addPosition(data, team_id){
- let url = `http://gisapi-web-staging-1636833739.eu-west-1.elb.amazonaws.com/v2/teams/${team_id}/positions`;
+ let url = `https://api-staging.aiesec.org/v2/teams/${team_id}/positions`;
  let response = await fetch(url, {
      method: 'POST',
      mode: 'cors',
